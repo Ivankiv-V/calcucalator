@@ -5,18 +5,21 @@ operation = input ("+ / * - ^ ")
 str_input2 = input("Delitel: ")
 delitel = int(str_input2)
 
-result = "Unknown"
 if operation == "+":
 	result = delimoe + delitel
 elif operation == "/":
-	result = delimoe / delitel
+         if delitel != 0:
+                 result = delimoe / delitel
+         else:
+               result = "Inf"         
+ 
 elif operation == "*":
-	result = delimoe * delitel
+        result = delimoe * delitel
 elif operation == "-":
-	result = delimoe - delitel
+	 result = delimoe - delitel
 elif operation == "^":
-	result = delimoe ** delitel
-else:
-	result = "Unknown"
+        result = delimoe ^ delitel
 
+	
 print("Result: " + str(result))
+
