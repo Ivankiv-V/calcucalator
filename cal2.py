@@ -1,48 +1,48 @@
-str_command = input("Please type your command a + b or a - b: ")
+str_command = input("Please type your command a + b or a - b: ").replace(' ', '')
+
+'''
+parsing
+'''
 
 sign_A = '' 
 sign_B = ''
 
 str_A = ''
 str_B = ''
+variables = ['']
+operations = []
 
-operation = '' 
-i = 0
+for i, letter in enumerate(str_command):
+	if letter in '+-*/^' and (i > 0) and variables[len(operations)] != '':
+		operations.append(letter)
+		variables.append('')
+	else:
+		index = len(operations)
+		variables[index] = variables[index] + letter
 
-while i < len(str_command) :
-    if str_command[i] == '+' or str_command[i] == '-' or str_command[i] == '*' or str_command[i] == '/' or str_command[i] == '^' :
-        if str_A == '': 
-            sign_A = str_command[i]
-        elif operation != '':
-            sign_B = str_command[i]
-        else:
-            operation = str_command[i]
-    else:
-        if operation == '':
-            str_A += str_command[i]
-        else:
-            str_B += str_command[i]
-    i += 1
+		
+'''
+calculation
+'''
 
-chislo_A=float(sign_A + str_A)
-chislo_B=float(sign_B + str_B)
+variables = list(map(float, variables))
+result = variables[0]
 
-result = None
+for i, operation in enumerate(operations):
+	if type(result) == str:
+		break
 
-if operation=='/' :
-    if chislo_B == 0:
-        result = "Inf"
-    else:
-        result = chislo_A/chislo_B
-elif operation=='*' : 
-    result=chislo_A*chislo_B
-elif operation=='-' : 
-    result=chislo_A-chislo_B
-elif operation=='+' : 
-    result=chislo_A+chislo_B
-elif operation=='^' : 
-    result=chislo_A**chislo_B
-else : 
-    result='Введите оператор'
+	var_A = result
+	var_B = variables[i + 1]
+
+	if operation in '+-*/':
+		if var_B == 0 and operation == '/':
+			result = 'Inf'
+		else:
+			result = eval('{0}{1}{2}'.format(var_A, operation, var_B))
+	elif operation == '^':
+		result = var_A ** var_B
+	else:
+		result = "unknown"
 
 print("Result: " + str(result))
