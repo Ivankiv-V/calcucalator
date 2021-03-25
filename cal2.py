@@ -33,7 +33,6 @@ for i in range(max(len(variables), len(operations))):
     if i < len(operations):
         stroka.append(operations[i])
 
-
 for i, l in enumerate(stroka):
     if 'sqrt' in l and '-' in l:
         oper.append('-(' + stroka[i].split('sqrt').pop())
@@ -133,7 +132,7 @@ for i in OUTPUT.split():
     elif i == '-':
         C = float(polskiu.pop())
         D = float(polskiu.pop())
-        polskiu.append(C - D)
+        polskiu.append(D-C)
     elif i == '+':
         C = float(polskiu.pop())
         D = float(polskiu.pop())
@@ -144,7 +143,7 @@ for i in OUTPUT.split():
     elif i == '^':
         C = float(polskiu.pop())
         D = float(polskiu.pop())
-        polskiu.append(C ** D)
+        polskiu.append(D ** C)
     elif i == '/':
         C = float(polskiu.pop())
         D = float(polskiu.pop())
@@ -153,7 +152,7 @@ for i in OUTPUT.split():
             result = 'inf'
             break
         else:
-            polskiu.append(C / D)
+            polskiu.append(D / C)
     else:
         polskiu.append(str(i))
 
