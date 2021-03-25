@@ -1,48 +1,164 @@
-str_command = input("Please type your command a + b or a - b: ").replace(' ', '')
+import math
 
-'''
-parsing
-'''
+supported_ops = ('+-*/^sqrtsincos')
 
-sign_A = '' 
-sign_B = ''
+ops = {'+':2, '-':2, '/':1, '*':1, '^':0, 'sin':1, 'cos':1}
 
-str_A = ''
-str_B = ''
+INPUT = input("Введите выражение: ").replace(' ', '')
+
+stack = []
+OUTPUT = []
+digit = False
+INPUT = list(INPUT)
+result = ''
 variables = ['']
+variables1 = []
 operations = []
+oper = []
+operand = []
+stroka = []
 
-for i, letter in enumerate(str_command):
-	if letter in '+-*/^' and (i > 0) and variables[len(operations)] != '':
-		operations.append(letter)
-		variables.append('')
-	else:
-		index = len(operations)
-		variables[index] = variables[index] + letter
+for i, letter in enumerate(INPUT):
+    if letter in '+-*/^' and (i > 0) and variables[len(operations)] != '':
+        operations.append(letter)
+        variables.append('')
+    else:
+        index = len(operations)
+        variables[index] = variables[index] + letter
 
-		
-'''
-calculation
-'''
 
-variables = list(map(float, variables))
-result = variables[0]
+for i in range(max(len(variables), len(operations))):
+    if i < len(variables):
+        stroka.append(variables[i])
+    if i < len(operations):
+        stroka.append(operations[i])
 
-for i, operation in enumerate(operations):
-	if type(result) == str:
-		break
 
-	var_A = result
-	var_B = variables[i + 1]
+for i, l in enumerate(stroka):
+    if 'sqrt' in l and '-' in l:
+        oper.append('-(' + stroka[i].split('sqrt').pop())
+        oper.append('0.5)')
+        operand.append('^')
+       
+    elif 'sqrt' in l:
+        oper.append(stroka[i].split('sqrt').pop())
+        oper.append(0.5)
+        operand.append('^')
+    elif 'sin' in l:
+        if '-' in l:
+            oper.append(stroka[i].split('sin').pop())
+            A = float(oper.pop())
+            B = str(0 - math.sin(A))
+            oper.append(B)
+        else:
+            oper.append(stroka[i].split('sin').pop())
+            A = float(oper.pop())
+            B = str(math.sin(A))
+            oper.append(B)
+    elif 'cos' in l:
+        if '-' in l:
+            oper.append(stroka[i].split('cos').pop())
+            A = float(oper.pop())
+            B = str(0 - math.cos(A))
+            oper.append(B)
+        else:
+            oper.append(stroka[i].split('cos').pop())
+            A = float(oper.pop())
+            B = str(math.cos(A))
+            oper.append(B)
+    else:
+        if l in '0123456789.' or ('-' in str(l) and ('1' in str(l) or '2' in str(l) or '3' in str(l) or '4' in str(l) or '5' in str(l) or '6' in str(l) or '7' in str(l) or '8' in str(l) or '9' in str(l))):
+            oper.append(l)
+        else:
+            operand.append(l)
 
-	if operation in '+-*/':
-		if var_B == 0 and operation == '/':
-			result = 'Inf'
-		else:
-			result = eval('{0}{1}{2}'.format(var_A, operation, var_B))
-	elif operation == '^':
-		result = var_A ** var_B
-	else:
-		result = "unknown"
+stroka.clear()
 
-print("Result: " + str(result))
+
+for i in range(max(len(oper), len(operand))):
+    if i < len(oper):
+        stroka.append(str(oper[i]))
+    if i < len(operand):
+        stroka.append(str(operand[i]))
+
+
+
+for i, l in enumerate(stroka):
+    if '-' in str(l) and ('1' in str(l) or '2' in str(l) or '3' in str(l) or '4' in str(l) or '5' in str(l) or '6' in str(l) or '7' in str(l) or '8' in str(l) or '9' in str(l)):
+        stroka[i] = str('(0' + stroka[i] + ')')
+
+
+INPUT = ''.join(stroka)
+
+
+for i in INPUT:
+    
+    if i in '0123456789.':
+        if len(OUTPUT) == 0:
+            OUTPUT = [i] + OUTPUT
+        else:
+            if OUTPUT[0][-1] in '0123456789.' and digit: OUTPUT[0] += i
+            else: OUTPUT = [i] + OUTPUT
+        digit = True
+    else: digit = False
+    
+    if i == '(':
+        stack = [i] + stack
+    
+    if i == ')':
+        while stack != [] and stack[0] != '(': OUTPUT, stack = [stack[0]] + OUTPUT, stack[1:]
+        if stack != [] and stack[0] == '(': stack = stack[1:]
+    
+    if i in ops:
+        while stack != [] and stack[0] in ops and ops[i] >= ops[stack[0]]: OUTPUT, stack = [stack[0]] + OUTPUT, stack[1:]
+        stack = [i] + stack
+
+while stack != []: OUTPUT, stack = [stack[0]] + OUTPUT, stack[1:]
+
+
+for i, l in enumerate(OUTPUT):
+    if '^' in str(l) and '^' in str(OUTPUT[i+2]):
+        OUTPUT[i+1], OUTPUT[i+2] = OUTPUT[i+2], OUTPUT[i+1]
+
+OUTPUT = " ".join(reversed(OUTPUT))
+
+
+polskiu = []
+
+for i in OUTPUT.split():
+    if i == '*':
+        C = float(polskiu.pop())
+        D = float(polskiu.pop())
+        polskiu.append(C * D)
+    elif i == '-':
+        C = float(polskiu.pop())
+        D = float(polskiu.pop())
+        polskiu.append(C - D)
+    elif i == '+':
+        C = float(polskiu.pop())
+        D = float(polskiu.pop())
+        polskiu.append(C + D)
+    elif i == 'sqrt':
+        C = polskiu.pop()
+        polskiu.append(C ** 0.5)
+    elif i == '^':
+        C = float(polskiu.pop())
+        D = float(polskiu.pop())
+        polskiu.append(C ** D)
+    elif i == '/':
+        C = float(polskiu.pop())
+        D = float(polskiu.pop())
+        if C == 0:
+            print("Делить на ноль нельзя")
+            result = 'inf'
+            break
+        else:
+            polskiu.append(C / D)
+    else:
+        polskiu.append(str(i))
+
+
+if result == 'inf':
+    print(result)
+else:
+    print("Результат: " + str(polskiu[0]))
