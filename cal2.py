@@ -66,7 +66,7 @@ for i, l in enumerate(stroka):
             B = str(math.cos(A))
             oper.append(B)
     else:
-        if l in '0123456789.' or ('-' in str(l) and ('1' in str(l) or '2' in str(l) or '3' in str(l) or '4' in str(l) or '5' in str(l) or '6' in str(l) or '7' in str(l) or '8' in str(l) or '9' in str(l))):
+        if any(map(lambda digit_letter: digit_letter in l, '0123456789.')):
             oper.append(l)
         else:
             operand.append(l)
