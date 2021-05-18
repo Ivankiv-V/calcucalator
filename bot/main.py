@@ -17,11 +17,15 @@ def handle_start(message):
 def any_msg(message):
     keyboard = telebot.types.InlineKeyboardMarkup()
     switch_button1 = telebot.types.InlineKeyboardButton(text="Купить страховой полис", switch_inline_query="Telegram")
+    keyboard.add(switch_button1)
     switch_button2 = telebot.types.InlineKeyboardButton(text="Вопросы по страховому полису", switch_inline_query="Telegram")
+    keyboard.add(switch_button2)
     switch_button3 = telebot.types.InlineKeyboardButton(text="Страховой случай", switch_inline_query="Telegram")
+    keyboard.add(switch_button3)
     switch_button4 = telebot.types.InlineKeyboardButton(text="Жалобы и предложения", switch_inline_query="Telegram")
+    keyboard.add(switch_button4)
     switch_button5 = telebot.types.InlineKeyboardButton(text="Другое", switch_inline_query="Telegram")
-    keyboard.add(switch_button1, switch_button2, switch_button3, switch_button4, switch_button5)
+    keyboard.add(switch_button5)
     bot.send_message(message.chat.id, "Пожалйста, выберите тематику обращения", reply_markup=keyboard)
 
 # Для ответа на непонятное обращение
