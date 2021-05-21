@@ -22,3 +22,8 @@ def any_msg(message):
 
 bot.polling(none_stop=True, interval=0)
 print(123)
+
+
+# ответы на вопросы из словарика
+@bot.message_handler(content_types=['text'])
+def get_text_msg
