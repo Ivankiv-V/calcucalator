@@ -43,16 +43,7 @@ def any_msg(message):
     keyboard.add(switch_button5)
     bot.send_message(message.chat.id, "Пожалйста, выберите тематику обращения", reply_markup=keyboard)
 
-# Для ответа на непонятное обращение
-@bot.message_handler(func=lambda message: True)
-def any_message(message):
-    bot.reply_to(message, "Я не понимаю, что такое {!s}! Перефразируйте!".format(message.text))
 
-@bot.edited_message_handler(func=lambda message: True)
-def edit_message(message):
-    bot.edit_message_text(chat_id=message.chat.id,
-                            text="Я не понимаю, что такое {!s}! Перефразируйте!".format(message.text),
-                            message_id=message.message_id + 1)
 
 # постоянная обработка информации
 bot.polling(none_stop=True, interval=0)
