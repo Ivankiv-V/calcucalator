@@ -20,7 +20,7 @@ buy_qa = {'Спасибо. Всего доброго!': 'Рад был Вам п
           'До свиданья': 'Рад был Вам помочь! Всего доброго и хорошего дня!',
           'Спасибо': 'Рад был Вам помочь! Всего доброго и хорошего дня!',
           'cпасибо': 'Рад был Вам помочь! Всего доброго и хорошего дня!',
-          'всего доброго': 'Рад был Вам помочь! Всего доброго и хорошего дня!'
+          'всего доброго': 'Рад был Вам помочь! Всего доброго и хорошего дня!',
           'до свиданья': 'Рад был Вам помочь! Всего доброго и хорошего дня!'}
 
 # приветственное письмо
@@ -30,36 +30,45 @@ def handle_start(message):
     user_markup.row('/Начать')
     bot.send_message(message.from_user.id, 'Добрый день, '+ message.from_user.first_name +'! Я - IngoBot и я помогу Вам в любом вопросе!', reply_markup=user_markup)
 
-# Ответ на вопросы (1 вариант из словаря/ 2 вариант - ошибка)
+# Ответ на вопросы (1 - вкладка быстрого доступа, 2 и 3 - из словаря, 4 - ошибка)
 @bot.message_handler(content_types=['text'])
 def get_text_message(message):
     print(message.from_user.first_name)
     bot.send_chat_action(message.from_user.id, 'typing')
     print(message.text)
-    if message.text in ingo_qa.keys():
+    if message.text == '/Начать':
+        bot.send_message(message.from_user.id, 'Рад буду Вам помочь!')
+        keyboard = telebot.types.InlineKeyboardMarkup()
+        switch_button1 = telebot.types.InlineKeyboardButton(text="Купить страховой полис", callback_data="var_1")
+        keyboard.add(switch_button1)
+        switch_button2 = telebot.types.InlineKeyboardButton(text="Вопросы по страховому полису", callback_data="var_2")
+        keyboard.add(switch_button2)
+        switch_button3 = telebot.types.InlineKeyboardButton(text="Страховой случай", callback_data="var_3")
+        keyboard.add(switch_button3)
+        switch_button4 = telebot.types.InlineKeyboardButton(text="Жалобы и предложения", callback_data="var_4")
+        keyboard.add(switch_button4)
+        switch_button5 = telebot.types.InlineKeyboardButton(text="Другое", callback_data="var_5")
+        keyboard.add(switch_button5)
+        bot.send_message(message.chat.id, "Пожалйста, выберите тематику обращения", reply_markup=keyboard)
+    elif message.text in ingo_qa.keys():
         bot.reply_to(message, ingo_qa.get(message.text))
     elif message.text in buy_qa.keys():
         bot.reply_to(message, buy_qa.get(message.text))
     else:
         bot.reply_to(message, "Я не понимаю, что такое {!s}! Перефразируйте!".format(message.text))
 
-
-# вкладка быстрого доступа
-@bot.message_handler(commands=['Начать'])
-def any_msg(message):
-    keyboard = telebot.types.InlineKeyboardMarkup()
-    switch_button1 = telebot.types.InlineKeyboardButton(text="Купить страховой полис", switch_inline_query="Telegram")
-    keyboard.add(switch_button1)
-    switch_button2 = telebot.types.InlineKeyboardButton(text="Вопросы по страховому полису", switch_inline_query="Telegram")
-    keyboard.add(switch_button2)
-    switch_button3 = telebot.types.InlineKeyboardButton(text="Страховой случай", switch_inline_query="Telegram")
-    keyboard.add(switch_button3)
-    switch_button4 = telebot.types.InlineKeyboardButton(text="Жалобы и предложения", switch_inline_query="Telegram")
-    keyboard.add(switch_button4)
-    switch_button5 = telebot.types.InlineKeyboardButton(text="Другое", switch_inline_query="Telegram")
-    keyboard.add(switch_button5)
-    bot.send_message(message.chat.id, "Пожалйста, выберите тематику обращения", reply_markup=keyboard)
-
+@bot.callback_query_handlers(func=lambda call: True)
+def test_callback(call):
+    if call.data == 'var_1':
+        print('Какой полис Вас интересует?')
+    elif call.data == 'var_2':
+        print('Пожалуйста, назовите номер Вашего полиса и полное ФИО')
+    elif call.data == 'var_3':
+        print('Пожалуйста, назовите номер Вашего полиса, полное ФИО и кратко опишите, что случилось')
+    elif call.data == 'var_4':
+        print('Мы рады услышить Ваше мнение!')
+    elif call.data == 'var_5':
+        print('Пожалуйста, опишите причину Вашего обращения')
 
 
 # постоянная обработка информации
