@@ -13,7 +13,13 @@ def handle_start(message):
     user_markup.row('/Начать')
     bot.send_message(message.from_user.id, 'Добрый день, '+ message.from_user.first_name +'! Я - IngoBot и я помогу Вам в любом вопросе!', reply_markup=user_markup)
 
+class User (object):
+    name = None
+    id = None
 
+    def __init__(self, id, name):
+        self.name = name
+        self.id = id
 
 
 # вкладка быстрого доступа

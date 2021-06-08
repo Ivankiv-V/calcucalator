@@ -23,6 +23,14 @@ buy_qa = {'Спасибо. Всего доброго!': 'Рад был Вам п
           'всего доброго': 'Рад был Вам помочь! Всего доброго и хорошего дня!',
           'до свиданья': 'Рад был Вам помочь! Всего доброго и хорошего дня!'}
 
+class user (object):
+    name = None
+    id = None
+
+    def __init__(self, id, name):
+        self.name = name
+        self.id = id
+
 # приветственное письмо
 @bot.message_handler(commands=['start'])
 def handle_start(message):
